@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/entities/message.dart';
 import 'package:provider/provider.dart';
-import 'package:yesno_app/presentation/Widgets/chat/her_message_bubble.dart';
-import 'package:yesno_app/presentation/Widgets/chat/my_message_bubble.dart';
-import 'package:yesno_app/presentation/Widgets/shared/message_field_box.dart';
-import 'package:yesno_app/presentation/providers/chat_provider.dart';
+import 'package:flutter_application_1/presentation/Widgets/chat/her_message_bubble.dart';
+import 'package:flutter_application_1/presentation/Widgets/chat/my_message_bubble.dart';
+import 'package:flutter_application_1/presentation/Widgets/shared/message_field_box.dart';
+import 'package:flutter_application_1/presentation/providers/chat_provider.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -16,7 +17,8 @@ class ChatScreen extends StatelessWidget {
           padding: const EdgeInsets.all(4.0),
           child: CircleAvatar(
             backgroundImage: NetworkImage(
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1200px-GitHub_Invertocat_Logo.svg.png'),
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1200px-GitHub_Invertocat_Logo.svg.png',
+            ),
           ),
         ),
         title: Text("Terminator"),
@@ -38,14 +40,16 @@ class _ChatView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-                child: ListView.builder(
-              itemCount: chatProvider.messageList.length,
-              itemBuilder: (context, index) {
-                return (index % 2 == 0)
-                    ? HerMessageBubble()
-                    : MyMessageBubble();
-              },
-            )),
+              child: ListView.builder(
+                itemCount: chatProvider.messageList.length,
+                itemBuilder: (context, index) {
+                  final message = chatProvider.messageList[index];
+                  return (message.fromWho == FromWho.hers)
+                      ? HerMessageBubble()
+                      : MyMessageBubble(message: message);
+                },
+              ),
+            ),
             const MessageFieldBox(),
           ],
         ),
