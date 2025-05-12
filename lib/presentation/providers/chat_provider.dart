@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entities/message.dart';
-//sendMessage
 
 class ChatProvider extends ChangeNotifier {
+  final ScrollController chatScrollController = ScrollController();
   List<Message> messageList = [
-    Message(text: "Hola Salazar", fromWho: FromWho.me),
-    Message(
-      text: "Por haberte ido te irás directo a especial",
-      fromWho: FromWho.me,
-    ),
+    Message(text: "jijihaha", fromWho: FromWho.hers),
+    Message(text: "lmfao", fromWho: FromWho.me),
   ];
 
   Future<void> sendMessage(String text) async {
-    final newMessage = Message(text: text, fromWho: FromWho.me);
-    //Agregar un nuevo mensaje a la lista
+    // Trim only leading and trailing spaces while keeping internal spaces
+    final trimmedText = text.trim();
+    if (trimmedText.isEmpty) return;
+
+    final newMessage = Message(
+      text: text,
+      fromWho: FromWho.me,
+    ); // Keep original text with internal spaces
     messageList.add(newMessage);
 
-    //Notifica a provider que algo cambio
+    // Print the current count of messages
+    print('Flutter: Cantidad de mensajes: ${messageList.length}');
+
     notifyListeners();
+    moveScrollToBottom();
+  }
+
+  Future<void> moveScrollToBottom() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    chatScrollController.animateTo(
+      chatScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 }
